@@ -95,7 +95,8 @@ async function submitPrompt(workflow, host) {
     });
 
     if (!response.ok) {
-        throw new Error(`[ComfyInject] Failed to submit prompt: ${response.status}`);
+        const body = await response.text().catch(() => "(unreadable)");
+        throw new Error(`[ComfyInject] Failed to submit prompt: ${response.status} — ${body}`);
     }
 
     const data = await response.json();
