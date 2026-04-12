@@ -30,8 +30,27 @@ async function loadWorkflow() {
     return await response.json();
 }
 
+// SillyTavern uses %placeholder% format. Map ComfyInject keys to their ST equivalents
+// so workflows exported from ST work without modification.
+const ST_PLACEHOLDER_ALIASES = {
+    POSITIVE_PROMPT: "prompt",
+    NEGATIVE_PROMPT: "negative_prompt",
+    SEED:            "seed",
+    WIDTH:           "width",
+    HEIGHT:          "height",
+    CHECKPOINT:      "checkpoint",
+    STEPS:           "steps",
+    CFG:             "cfg",
+    SAMPLER:         "sampler",
+    SCHEDULER:       "scheduler",
+    DENOISE:         "denoise",
+};
+
 /**
- * Fills all {{PLACEHOLDER}} tokens in the workflow with real values.
+ * Fills placeholder tokens in the workflow with real values.
+ * Supports both {{PLACEHOLDER}} (ComfyInject format) and %placeholder% (SillyTavern format).
+ * Placeholders not present in the workflow are silently ignored, so workflows that
+ * hard-code their own sampler settings are unaffected.
  * Operates on a deep copy so the original is never mutated.
  * @param {object} workflow - The raw workflow object
  * @param {object} values - Key/value pairs to substitute
@@ -41,10 +60,21 @@ function fillWorkflow(workflow, values) {
     let workflowStr = JSON.stringify(workflow);
 
     for (const [key, value] of Object.entries(values)) {
-        const placeholder = `"{{${key}}}"`;
         const replacement = JSON.stringify(value);
-        while (workflowStr.includes(placeholder)) {
-            workflowStr = workflowStr.replace(placeholder, replacement);
+
+        // {{PLACEHOLDER}} format
+        const comfyPlaceholder = `"{{${key}}}"`;
+        while (workflowStr.includes(comfyPlaceholder)) {
+            workflowStr = workflowStr.replace(comfyPlaceholder, replacement);
+        }
+
+        // %placeholder% format (SillyTavern)
+        const stKey = ST_PLACEHOLDER_ALIASES[key];
+        if (stKey) {
+            const stPlaceholder = `"%${stKey}%"`;
+            while (workflowStr.includes(stPlaceholder)) {
+                workflowStr = workflowStr.replace(stPlaceholder, replacement);
+            }
         }
     }
 

@@ -37,6 +37,21 @@
 
             <hr class="sysHR" />
 
+            <!-- Auto Prompt Injection -->
+            <div class="flex-container flexGap5 alignItemsCenter">
+                <label class="checkbox_label" for="comfyinject_auto_prompt_enabled" title="Automatically inject the ComfyInject system prompt into every generation. Equivalent to pasting it into Author's Note on every character.">
+                    <input id="comfyinject_auto_prompt_enabled" type="checkbox" />
+                    <span>Auto-inject system prompt</span>
+                </label>
+            </div>
+            <div id="comfyinject_auto_prompt_depth_row" class="flex-container flexGap5 alignItemsCenter" style="display:none; margin-top: 4px;">
+                <label for="comfyinject_auto_prompt_depth" style="white-space: nowrap;">Injection depth</label>
+                <input id="comfyinject_auto_prompt_depth" type="number" class="text_pole" min="0" max="100" step="1" style="width: 70px;" />
+                <small>Messages from the bottom of chat. Lower = closer to recent messages = better compliance.</small>
+            </div>
+
+            <hr class="sysHR" />
+
             <!-- Gallery Button -->
             <div class="flex-container flexGap5">
                 <div id="comfyinject_gallery_btn" class="menu_button menu_button_icon">
@@ -81,6 +96,7 @@
                 <small>This will be the very last thing in the positive prompt, after the LLM's output.</small>
 
                 <!-- Sampler Settings -->
+                <small>The settings below are <b>optional overrides</b>. They only apply if your workflow contains the corresponding placeholder (<code>{{STEPS}}</code>, <code>{{CFG}}</code>, etc.). Workflows with hard-coded sampler settings are unaffected.</small>
                 <div class="flex-container flexGap5 alignItemsCenter">
                     <label for="comfyinject_steps">Steps</label>
                     <input id="comfyinject_steps" type="number" class="text_pole" min="1" max="150" />

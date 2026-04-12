@@ -6,25 +6,47 @@ ComfyInject ships with `comfyinject_default.json` which works out of the box usi
 
 ---
 
-## Placeholder Requirements
+## Placeholder Formats
 
-Your workflow JSON can use any of the following placeholder strings. ComfyInject will replace them with real values before sending to ComfyUI. **You don't have to use all of them** — only place the ones that are relevant to your workflow. Any placeholder not present in your JSON is simply ignored.
+ComfyInject supports two placeholder formats. Use whichever matches your workflow — they are interchangeable and can be mixed in the same file.
+
+### ComfyInject format: `{{PLACEHOLDER}}`
 
 | Placeholder | Type | Description |
 |---|---|---|
-| `"{{CHECKPOINT}}"` | string | Model filename from the Checkpoint field in settings |
 | `"{{POSITIVE_PROMPT}}"` | string | Prepend prompt + shot tags + LLM prompt + append prompt |
 | `"{{NEGATIVE_PROMPT}}"` | string | Negative prompt from settings |
+| `"{{SEED}}"` | integer | Resolved numeric seed |
 | `"{{WIDTH}}"` | integer | Image width in pixels |
 | `"{{HEIGHT}}"` | integer | Image height in pixels |
-| `"{{SEED}}"` | integer | Resolved numeric seed |
-| `"{{STEPS}}"` | integer | Sampling steps |
-| `"{{CFG}}"` | float | CFG scale |
-| `"{{SAMPLER}}"` | string | Sampler name |
-| `"{{SCHEDULER}}"` | string | Scheduler name |
-| `"{{DENOISE}}"` | float | Denoise strength |
+| `"{{CHECKPOINT}}"` | string | Model filename from the Checkpoint field in settings |
+| `"{{STEPS}}"` | integer | Sampling steps (optional override) |
+| `"{{CFG}}"` | float | CFG scale (optional override) |
+| `"{{SAMPLER}}"` | string | Sampler name (optional override) |
+| `"{{SCHEDULER}}"` | string | Scheduler name (optional override) |
+| `"{{DENOISE}}"` | float | Denoise strength (optional override) |
 
-> The quotes are part of the placeholder syntax. In your JSON file, the value field must be the placeholder string in quotes, e.g. `"seed": "{{SEED}}"`. ComfyInject replaces the entire quoted string including the quotes with the correct typed value.
+### SillyTavern format: `%placeholder%`
+
+Workflows exported from SillyTavern's built-in image generation use this format and work without modification.
+
+| Placeholder | Type | Description |
+|---|---|---|
+| `"%prompt%"` | string | Equivalent to `{{POSITIVE_PROMPT}}` |
+| `"%negative_prompt%"` | string | Equivalent to `{{NEGATIVE_PROMPT}}` |
+| `"%seed%"` | integer | Equivalent to `{{SEED}}` |
+| `"%width%"` | integer | Equivalent to `{{WIDTH}}` |
+| `"%height%"` | integer | Equivalent to `{{HEIGHT}}` |
+| `"%checkpoint%"` | string | Equivalent to `{{CHECKPOINT}}` |
+| `"%steps%"` | integer | Equivalent to `{{STEPS}}` |
+| `"%cfg%"` | float | Equivalent to `{{CFG}}` |
+| `"%sampler%"` | string | Equivalent to `{{SAMPLER}}` |
+| `"%scheduler%"` | string | Equivalent to `{{SCHEDULER}}` |
+| `"%denoise%"` | float | Equivalent to `{{DENOISE}}` |
+
+> Placeholders not present in your workflow are silently ignored. Workflows that hard-code their own sampler settings, checkpoint, or resolution are unaffected by the corresponding ComfyInject settings.
+
+> The quotes are part of the placeholder syntax. In your JSON file, the value field must be the placeholder string in quotes, e.g. `"seed": "{{SEED}}"` or `"seed": "%seed%"`. ComfyInject replaces the entire quoted string — including the quotes — with the correct typed value.
 
 ### About `{{CHECKPOINT}}`
 

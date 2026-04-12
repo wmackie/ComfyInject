@@ -1,5 +1,6 @@
 import { MODULE_NAME, defaultSettings } from "../settings.js";
 import { openGallery } from "./gallery.js";
+import { updateExtensionPrompt } from "../index.js";
 
 const EXTENSION_FOLDER = `scripts/extensions/third-party/ComfyInject`;
 
@@ -188,6 +189,11 @@ function populateUI() {
     $("#comfyinject_seed_lock_mode").val(settings.seed_lock_mode);
     $("#comfyinject_seed_lock_value").val(settings.seed_lock_value);
     updateSeedLockUI(settings.seed_lock_enabled);
+
+    // Auto prompt injection
+    $("#comfyinject_auto_prompt_enabled").prop("checked", settings.auto_prompt_enabled);
+    $("#comfyinject_auto_prompt_depth").val(settings.auto_prompt_depth);
+    $("#comfyinject_auto_prompt_depth_row").toggle(settings.auto_prompt_enabled);
 
     // Marker repair notifications
     $("#comfyinject_repair_toast_mode").val(settings.repair_toast_mode || "failures");
@@ -432,6 +438,22 @@ function wireEvents() {
     $("#comfyinject_seed_lock_value").on("input", function () {
         getSettings().seed_lock_value = parseInt($(this).val(), 10);
         saveSettings();
+    });
+
+    // Auto prompt injection — toggle
+    $("#comfyinject_auto_prompt_enabled").on("change", function () {
+        const enabled = $(this).prop("checked");
+        getSettings().auto_prompt_enabled = enabled;
+        $("#comfyinject_auto_prompt_depth_row").toggle(enabled);
+        saveSettings();
+        updateExtensionPrompt();
+    });
+
+    // Auto prompt injection — depth
+    $("#comfyinject_auto_prompt_depth").on("input", function () {
+        getSettings().auto_prompt_depth = parseInt($(this).val(), 10);
+        saveSettings();
+        updateExtensionPrompt();
     });
 
     // Marker repair notifications
