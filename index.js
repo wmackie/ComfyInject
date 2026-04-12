@@ -85,9 +85,11 @@ function initSettings() {
     saveSettingsDebounced();
 }
 
+const VERSION = "1.0.4";
+
 // Entry point
 (async () => {
-    console.log("[ComfyInject] Loading...");
+    console.log(`[ComfyInject] Loading... (v${VERSION})`);
 
     initSettings();
     await initUI();
@@ -98,5 +100,5 @@ function initSettings() {
     const { eventSource, event_types } = SillyTavern.getContext();
     eventSource.on(event_types.CHAT_CHANGED, updateExtensionPrompt);
 
-    console.log("[ComfyInject] Ready!");
+    console.log(`[ComfyInject] Ready! (v${VERSION})`);
 })();
