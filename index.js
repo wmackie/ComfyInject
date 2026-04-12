@@ -93,5 +93,9 @@ function initSettings() {
     initDom();
     updateExtensionPrompt();
 
+    // Re-apply the extension prompt whenever ST clears it (character/chat changes)
+    const { eventSource, event_types } = SillyTavern.getContext();
+    eventSource.on(event_types.CHAT_CHANGED, updateExtensionPrompt);
+
     console.log("[ComfyInject] Ready!");
 })();
