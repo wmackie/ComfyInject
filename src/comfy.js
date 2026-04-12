@@ -62,10 +62,12 @@ function fillWorkflow(workflow, values) {
     for (const [key, value] of Object.entries(values)) {
         const replacement = JSON.stringify(value);
 
-        // {{PLACEHOLDER}} format
-        const comfyPlaceholder = `"{{${key}}}"`;
-        while (workflowStr.includes(comfyPlaceholder)) {
-            workflowStr = workflowStr.replace(comfyPlaceholder, replacement);
+        // {{PLACEHOLDER}} format — try both UPPER and lower case
+        for (const variant of [key, key.toLowerCase()]) {
+            const comfyPlaceholder = `"{{${variant}}}"`;
+            while (workflowStr.includes(comfyPlaceholder)) {
+                workflowStr = workflowStr.replace(comfyPlaceholder, replacement);
+            }
         }
 
         // %placeholder% format (SillyTavern)
