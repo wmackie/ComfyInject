@@ -55,7 +55,8 @@ export function updateExtensionPrompt() {
     const settings = extensionSettings[MODULE_NAME];
 
     if (settings.auto_prompt_enabled) {
-        setExtensionPrompt(MODULE_NAME, AUTO_PROMPT_TEXT);
+        // Position 1 = IN_PROMPT (hardcoded — extension_prompt_types unavailable in this ST build)
+        setExtensionPrompt(MODULE_NAME, AUTO_PROMPT_TEXT, 1, 0);
     } else {
         setExtensionPrompt(MODULE_NAME, "");
     }
