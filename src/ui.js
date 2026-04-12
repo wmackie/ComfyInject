@@ -192,8 +192,6 @@ function populateUI() {
 
     // Auto prompt injection
     $("#comfyinject_auto_prompt_enabled").prop("checked", settings.auto_prompt_enabled);
-    $("#comfyinject_auto_prompt_depth").val(settings.auto_prompt_depth);
-    $("#comfyinject_auto_prompt_depth_row").toggle(settings.auto_prompt_enabled);
 
     // Marker repair notifications
     $("#comfyinject_repair_toast_mode").val(settings.repair_toast_mode || "failures");
@@ -444,14 +442,6 @@ function wireEvents() {
     $("#comfyinject_auto_prompt_enabled").on("change", function () {
         const enabled = $(this).prop("checked");
         getSettings().auto_prompt_enabled = enabled;
-        $("#comfyinject_auto_prompt_depth_row").toggle(enabled);
-        saveSettings();
-        updateExtensionPrompt();
-    });
-
-    // Auto prompt injection — depth
-    $("#comfyinject_auto_prompt_depth").on("input", function () {
-        getSettings().auto_prompt_depth = parseInt($(this).val(), 10);
         saveSettings();
         updateExtensionPrompt();
     });

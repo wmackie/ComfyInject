@@ -51,11 +51,11 @@ Never explain or mention the marker in narration.`;
  * Safe to call at any time — re-reads settings on each call.
  */
 export function updateExtensionPrompt() {
-    const { extensionSettings, setExtensionPrompt, extension_prompt_types } = SillyTavern.getContext();
+    const { extensionSettings, setExtensionPrompt } = SillyTavern.getContext();
     const settings = extensionSettings[MODULE_NAME];
 
     if (settings.auto_prompt_enabled) {
-        setExtensionPrompt(MODULE_NAME, AUTO_PROMPT_TEXT, extension_prompt_types.IN_CHAT, settings.auto_prompt_depth);
+        setExtensionPrompt(MODULE_NAME, AUTO_PROMPT_TEXT);
     } else {
         setExtensionPrompt(MODULE_NAME, "");
     }

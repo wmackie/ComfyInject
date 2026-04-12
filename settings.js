@@ -68,11 +68,8 @@ export const defaultSettings = Object.freeze({
 
     // --- Auto Prompt Injection ---
     // When enabled, ComfyInject automatically injects its system prompt into every
-    // generation. Depth controls how far from the bottom of the chat the prompt is
-    // inserted — lower values place it closer to recent messages, which improves
-    // LLM format compliance. Equivalent to placing the prompt in Author's Note.
+    // generation. Equivalent to placing the prompt in Author's Note.
     auto_prompt_enabled: false,
-    auto_prompt_depth: 2,
 
     // --- Marker Repair Notifications ---
     // Controls when parser repair toasts are shown.
