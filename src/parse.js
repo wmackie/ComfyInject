@@ -494,7 +494,8 @@ export async function processAllImageMarkers(text, messageIndex) {
                 shot,
                 repairMeta,
             });
-        } catch {
+        } catch (err) {
+            console.error("[ComfyInject] generateImage threw:", err);
             results.push({
                 status: "generation_error",
                 repairMeta,
