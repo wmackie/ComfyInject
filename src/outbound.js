@@ -1,3 +1,5 @@
+import { MODULE_NAME, AUTO_PROMPT_TEXT } from "../settings.js";
+
 // Regex to find injected comfyinject <img> tags in message text
 const IMG_TAG_REGEX = /<img class="comfyinject-image"[^>]*>/g;
 
@@ -23,6 +25,21 @@ globalThis.comfyInjectInterceptor = async function(chat, contextSize, abort, typ
     // Skip quiet generations (summaries, silent background calls etc)
     // so we don't accidentally interfere with other extensions
     if (type === "quiet") return;
+
+    // Inject the system prompt directly into the chat array so it reaches
+    // the LLM regardless of which ST backend or prompt assembly path is used.
+    // Injected near the end (before the last user message) for maximum effect.
+    const { extensionSettings } = SillyTavern.getContext();
+    const settings = extensionSettings[MODULE_NAME];
+    if (settings?.auto_prompt_enabled) {
+        const injectionIndex = Math.max(0, chat.length - 1);
+        chat.splice(injectionIndex, 0, {
+            is_user: false,
+            mes: AUTO_PROMPT_TEXT,
+            name: "system",
+            extra: { as_role: "system" },
+        });
+    }
 
     for (let i = 0; i < chat.length; i++) {
         const message = chat[i];
